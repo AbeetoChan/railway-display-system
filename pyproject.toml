@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "railway-display-system"
+version = "0.1.0"
+description = ""
+authors = ["AbeetoChan <abinavkumar347@gmail.com>"]
+readme = "README.md"
+packages = [{include = "railway_display_system"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+redis = "^4.5.1"
+flask = "^2.2.3"
+werkzeug = "^2.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

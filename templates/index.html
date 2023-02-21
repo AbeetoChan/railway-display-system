@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Railway display system</title>
+
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap');
+
+            table, th, td {
+                border: 1px solid black;
+                width: 50%;
+                height: 50%;
+                margin-left: auto;
+                margin-right: auto;
+                text-align: center;
+                font-family: 'Montserrat', sans-serif;
+            }
+        </style>
+    </head>
+
+    <body>
+        <script>
+            const data_url = {{ url_for("get_all_train_data") | tojson }}
+            var rows
+
+            function delayedRecursive() {
+                fetch(data_url)
+                .then(response => response.json())
+                .then(data => {
+                    clearTable()
+                    const tableElement = document.querySelector("table")
+                    makeTable(tableElement, data)
+                })
+
+                setTimeout(delayedRecursive, 5000);
+            }
+
+            delayedRecursive()
+
+            function appendCell(row, text) {
+                let cell = row.insertCell()
+                let textNode = document.createTextNode(text)
+                cell.appendChild(textNode)
+            }
+
+            function makeTable(table, data) {
+                rows = 0
+
+                const keys = Object.keys(data)
+                for (let i = 0; i < keys.length; i++) {
+                    let row = table.insertRow()
+                    let value = data[keys[i]]
+                    appendCell(row, value["time"])
+                    appendCell(row, value["destination"])
+                    appendCell(row, value["platform"])
+                    appendCell(row, value["expected"] == 1 ? "Late" : "Early")
+                    rows++
+                }
+            }
+
+            function clearTable(table) {
+                for (let i = 0; i < rows; i++) {
+                    table.deleteRow(i)
+                }
+            }
+        </script>
+
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>Destination</th>
+                <th>Platform</th>
+                <th>Expected</th>
+            </tr>
+        </table>
+    </body>
+</html>
