@@ -21,21 +21,18 @@
     <body>
         <script>
             const data_url = {{ url_for("get_all_train_data") | tojson }}
-            var rows
 
-            function delayedRecursive() {
+            function main() {
                 fetch(data_url)
                 .then(response => response.json())
                 .then(data => {
-                    clearTable()
                     const tableElement = document.querySelector("table")
+                    clearTable(tableElement)
                     makeTable(tableElement, data)
                 })
-
-                setTimeout(delayedRecursive, 5000);
             }
 
-            delayedRecursive()
+            setTimeout(main, 5000);
 
             function appendCell(row, text) {
                 let cell = row.insertCell()
@@ -44,9 +41,8 @@
             }
 
             function makeTable(table, data) {
-                rows = 0
-
                 const keys = Object.keys(data)
+
                 for (let i = 0; i < keys.length; i++) {
                     let row = table.insertRow()
                     let value = data[keys[i]]
@@ -54,12 +50,11 @@
                     appendCell(row, value["destination"])
                     appendCell(row, value["platform"])
                     appendCell(row, value["expected"] == 1 ? "Late" : "On time")
-                    rows++
                 }
             }
 
             function clearTable(table) {
-                for (let i = 0; i < rows; i++) {
+                for (let i = 0; i < table.rows.length; i++) {
                     table.deleteRow(i)
                 }
             }

@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template
-from werkzeug.exceptions import BadRequest, NotFound
+from werkzeug.exceptions import BadRequest, InternalServerError, NotFound
 from handler import TrainInfoHandler
 from datetime import datetime
 
@@ -49,6 +49,10 @@ def home_page():
 def handle_bad_request(_e):
     return {"error": "Bad request"}, 400
 
+
+@app.errorhandler(InternalServerError)
+def handle_bad_request(_e):
+    return {"error": "Internal server error"}, 500
 
 if __name__ == "__main__":
     app.run(threaded=True)
